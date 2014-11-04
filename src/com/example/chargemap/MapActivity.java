@@ -1,15 +1,12 @@
 package com.example.chargemap;
 
 import android.content.Context;
-import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-
-import com.example.chargemap.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -26,11 +23,10 @@ public class MapActivity extends FragmentActivity implements LocationListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         db = new DBConnect(this);
-        ///
+        setUpMapIfNeeded();
+
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        Criteria criteria = new Criteria();
-        Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
-        //LocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+        Location location = locationManager.getLastKnownLocation("network");
         
         Log.d("Default", "Location = " + location);
         if (location != null)
@@ -46,10 +42,8 @@ public class MapActivity extends FragmentActivity implements LocationListener {
             .tilt(40)                   // Sets the tilt of the camera to 30 degrees
             .build();                   // Creates a CameraPosition from the builder
             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
         }
-        ///
-        setUpMapIfNeeded();
+
     }
 
     @Override
@@ -69,7 +63,7 @@ public class MapActivity extends FragmentActivity implements LocationListener {
         // Initialize map options. For example:
         // mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
         //double[][] markersList = db.getList();
-        //printMarkersToConsole();
+        printMarkersToConsole();
         
     }
     
@@ -79,11 +73,10 @@ public class MapActivity extends FragmentActivity implements LocationListener {
 		int listIndex = 0;
 		for(int i = 0; i < list.length; i++)
 		{
-			Log.d("Default", "The list is: " + list[listIndex][0] + ", " + list[listIndex][1]);
+			//Log.d("Default", "The list is: " + list[listIndex][0] + ", " + list[listIndex][1]);
 			addMarker(list[listIndex][0], list[listIndex][1]);
 			listIndex++;
 		}
-
 	}
 	
 	private void addMarker(double lat, double lon){
@@ -115,7 +108,7 @@ public class MapActivity extends FragmentActivity implements LocationListener {
 		// TODO Auto-generated method stub
 		
 	}
-	
+
 	/*
 	private void centerMapOnMyLocation() {
 		mMap.setMyLocationEnabled(true);
